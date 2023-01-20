@@ -34,10 +34,11 @@ const MainPlot = ({ props: { form, setForm } }) => {
       type: "scatter",
       mode: "markers+text",
       name: "",
-      hoverinfo: "text",
+      hoverinfo: "none",
       marker: { color: "red", size: "12" },
     };
 
+    // If filtered for country:
     if (country !== "all") {
       // Reduce opacity of all countries
       allCountriesTrace.marker.opacity = 0.1;
@@ -46,6 +47,7 @@ const MainPlot = ({ props: { form, setForm } }) => {
       const countryIndex = allCountriesTrace.text.findIndex((s) =>
         s.includes(country)
       );
+      // If missing x or y datapoints
       if (
         !allCountriesTrace.x[countryIndex] ||
         !allCountriesTrace.y[countryIndex]
@@ -60,13 +62,17 @@ const MainPlot = ({ props: { form, setForm } }) => {
             showarrow: false,
           },
         ]);
-      } else {
+      }
+      // No missing x or y datapoints
+      else {
         filteredTrace.x = [allCountriesTrace.x[countryIndex]];
         filteredTrace.y = [allCountriesTrace.y[countryIndex]];
         filteredTrace.text = [country];
         setAnnotations([]);
       }
-    } else {
+    }
+    // Show all countries - reset annotations and styles
+    else {
       allCountriesTrace.marker.opacity = 1;
       setAnnotations([]);
     }
