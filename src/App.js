@@ -1,4 +1,5 @@
 import MainPlot from "./components/MainPlot";
+import PlotContainer from "./components/PlotContainer";
 
 function App() {
   return (
@@ -7,11 +8,7 @@ function App() {
         Title + Logo
       </h1>
       <MainPlot />
-      <iframe
-        src="/plots/infant_exp.html"
-        height={600}
-        width={900}
-      />
+      <PlotContainer />
     </div>
   );
 }
