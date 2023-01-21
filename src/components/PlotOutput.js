@@ -11,7 +11,6 @@ const PlotOutput = ({ props: { form } }) => {
 
     useEffect(() => {
         const data = document.querySelectorAll("script[type='application/json']");
-        console.log(data)
     }, [plotRef.current,form])
     
   return (
