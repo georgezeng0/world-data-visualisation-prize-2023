@@ -24,7 +24,7 @@ const PlotForm = ({ props: { setForm, form } }) => {
       </div>
       <div>
         <label htmlFor="country">Country</label>
-        <select onChange={handleChange} name="country" id="country">
+        <select onChange={handleChange} name="country" id="country" value={form.country}>
           <option value="all">-----------</option>
           {countries.map((country, i) => (
             <option key={i} value={country}>

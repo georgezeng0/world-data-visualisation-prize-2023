@@ -1,6 +1,6 @@
 import { useState } from "react";
+import ColorGradient from "./components/ColorGradient";
 import MainPlot from "./components/MainPlot";
-import PlotContainer from "./components/PlotContainer";
 import PlotForm from "./components/PlotForm";
 
 const initialForm = {
@@ -17,8 +17,8 @@ function App() {
         Title + Logo
       </h1>
       <PlotForm props={{ form, setForm }}/>
-      <MainPlot props={{ form, setForm }}/>
-      <PlotContainer props={{ form, setForm }} />
+      <MainPlot props={{ form, setForm }} />
+      <ColorGradient/>
     </div>
   );
 }
