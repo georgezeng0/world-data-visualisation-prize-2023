@@ -11,9 +11,6 @@
 # production
 /build
 
-# R folder
-/R_data/.Rproj.user
-
 # misc
 .DS_Store
 .env.local
