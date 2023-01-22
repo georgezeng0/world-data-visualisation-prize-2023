@@ -196,7 +196,7 @@ const MainPlot = ({ props: { form, setForm } }) => {
               cmin: -4,
               color: colors,
               line: undefined,
-              //showscale: true
+              //showscale: true 
             }
           : // marker for infant mortality and maternal mortality
             {
