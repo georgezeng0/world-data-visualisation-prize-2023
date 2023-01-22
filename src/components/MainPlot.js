@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Plot from "react-plotly.js";
-import data from "../data/plot_data.json";
 import inf_exp_data from "../data/inf_exp.json";
 import mat_exp_data from "../data/mat_exp.json";
 import life_exp_data from "../data/life_exp.json";
@@ -13,9 +12,21 @@ const MainPlot = ({ props: { form, setForm } }) => {
     life_vs_exp: life_exp_data,
   };
   const titles = {
-    inf_vs_exp: "inf_exp_data",
-    mat_vs_exp: "mat_exp_data",
-    life_vs_exp: "life_exp_data",
+    inf_vs_exp: {
+      title: "Infant Mortality vs Health Expediture",
+      x_title: "Log Health Expediture",
+      y_title: "Log Infant Mortality",
+    },
+    mat_vs_exp: {
+      title: "Maternal Mortality vs Health Expediture",
+      x_title: "Log Health Expediture",
+      y_title: "Log Maternal Mortality",
+    },
+    life_vs_exp: {
+      title: "Life Expectancy vs Health Expenditure",
+      x_title: "Log Health Expediture",
+      y_title: "Life Expectancy",
+    },
   };
   const metrics = {
     inf_vs_exp: "Infant Mortality (per 1,000 live births)",
@@ -31,9 +42,12 @@ const MainPlot = ({ props: { form, setForm } }) => {
     const country = form.country;
 
     const allCountriesTrace = { ...dataSrc[0] }; // 1st trace in the data array
-    allCountriesTrace.name = "all_countries";
+    allCountriesTrace.name = "Country";
+    allCountriesTrace.showlegend = true;
 
     const fittedTrace = { ...dataSrc[1] }; // 2nd trace in the data array
+    fittedTrace.name = "Fitted Line";
+    fittedTrace.showlegend = true;
 
     //fittedTrace.hoverinfo = "x+y";
 
@@ -45,7 +59,8 @@ const MainPlot = ({ props: { form, setForm } }) => {
       textposition: "top center", // if below fitted line > will change to bottom center
       type: "scatter",
       mode: "markers+text",
-      name: "",
+      name: "Selected Country",
+      showlegend: true,
       hoverinfo: "none",
       marker: { color: "red", size: "12" },
     };
@@ -58,6 +73,7 @@ const MainPlot = ({ props: { form, setForm } }) => {
       type: "scatter",
       mode: "lines",
       name: "",
+      showlegend: false,
       hoverinfo: "none",
       marker: { color: "red", size: "6" },
     };
@@ -84,6 +100,9 @@ const MainPlot = ({ props: { form, setForm } }) => {
             x: 1,
             y: 1,
             showarrow: false,
+            font: {
+              size: 18,
+            },
           },
         ]);
       }
@@ -114,7 +133,6 @@ const MainPlot = ({ props: { form, setForm } }) => {
         // Annotation for country
         const [metric_text, exp_text, country_text] =
           allCountriesTrace.text[countryIndex].split("<br />");
-        
 
         setAnnotations([
           {
@@ -126,8 +144,11 @@ const MainPlot = ({ props: { form, setForm } }) => {
             yref: "paper",
             align: "right",
             x: 1,
-            y: 1,
+            y: form.plotId === "life_vs_exp" ? 0.2 : 1,
             showarrow: false,
+            font: {
+              size: 18,
+            },
           },
         ]);
       }
@@ -135,6 +156,59 @@ const MainPlot = ({ props: { form, setForm } }) => {
     // Show all countries - reset annotations and styles
     else {
       allCountriesTrace.marker.opacity = 1;
+
+      // For each country, set colour depending on distance to closest point on fitted trace
+      const colorscale = [
+        [0, "green"],
+        [0.3, "green"],
+        [0.5, "blue"],
+        [0.6, "red"],
+        [1.0, "red"],
+      ];
+
+      const closestFittedYArray = allCountriesTrace.x.map((countryX) => {
+        const closestFittedX = fittedTrace.x.reduce((a, b) => {
+          return Math.abs(b - countryX) < Math.abs(a - countryX) ? b : a;
+        });
+        const closestFittedIndex = fittedTrace.x.indexOf(closestFittedX);
+        const fittedY = fittedTrace.y[closestFittedIndex];
+        return fittedY;
+      });
+
+      const colors = allCountriesTrace.y.map((countryY, i) => {
+        const fittedY = closestFittedYArray[i];
+        const diff = countryY - fittedY;
+        return diff;
+      });
+
+      allCountriesTrace.marker =
+        form.plotId === "life_vs_exp"
+          ? // marker for life expectancy
+            {
+              ...allCountriesTrace.marker,
+              //colorscale: "Portland",
+              colorscale: colorscale,
+              autocolorscale: false,
+              cauto: false,
+              // Custom color scale as raw data is not standardised
+              cmid: 0,
+              cmax: 4,
+              cmin: -4,
+              color: colors,
+              line: undefined,
+              //showscale: true
+            }
+          : // marker for infant mortality and maternal mortality
+            {
+              ...allCountriesTrace.marker,
+              //colorscale: "Portland",
+              colorscale: colorscale,
+              autocolorscale: false,
+              cauto: true,
+              color: colors,
+              line: undefined,
+            };
+
       setAnnotations([]);
     }
 
@@ -145,7 +219,7 @@ const MainPlot = ({ props: { form, setForm } }) => {
   const handleClick = (e) => {
     const clickedPoint = e.points[0];
     // If all countries trace
-    if (clickedPoint.data.name === "all_countries") {
+    if (clickedPoint.data.name === "Country") {
       const [country] = clickedPoint.text.match(/(?<=Country: ).*/g); //Match everything after "Country: "
       // Set country input to country clicked (checks if valid after regex check)
       if (countries.indexOf(country) >= 0) {
@@ -160,8 +234,59 @@ const MainPlot = ({ props: { form, setForm } }) => {
       layout={{
         width: 900,
         height: 600,
-        title: titles[form.plotId],
-        showlegend: false,
+        //font
+        font: {
+          family: "Arial",
+          size: 14,
+        },
+        // Margins
+        margin: {
+          autoexpand: true,
+          r: 0,
+          t: 70,
+          b: 0,
+          l: 0,
+        },
+        // Axes
+        xaxis: {
+          title: {
+            text: `<b>${titles[form.plotId].x_title}</b>`,
+            font: {
+              //color: '',
+              size: 22,
+            },
+            //standoff: 100
+          },
+          automargin: true,
+          showticklabels: false,
+          zeroline: false,
+          showgrid: false,
+          //showline: true
+        },
+        yaxis: {
+          title: {
+            text: `<b>${titles[form.plotId].y_title}</b>`,
+            font: {
+              //color: '',
+              size: 22,
+            },
+            //standoff: 50
+          },
+          automargin: true,
+          showticklabels: false,
+          zeroline: false,
+          showgrid: false,
+          //showline: true
+        },
+        //title: titles[form.plotId].title,
+        showlegend: true,
+        legend: {
+          orientation: "h",
+          x: 1,
+          y: 1.08,
+          //valign: "top"
+          xanchor: "right",
+        },
         annotations: annotations,
       }}
       config={{ displaylogo: false }}
@@ -171,31 +296,3 @@ const MainPlot = ({ props: { form, setForm } }) => {
 };
 
 export default MainPlot;
-
-// DELETE ON PRODUCTION IF NOT USED:
-const RawPlot = () => {
-  const health_exp_z_transformed = data.map(
-    (item) => item.healthexp_usd_percap_2019_z_transformed
-  );
-  const infant_mort_z_transformed = data.map(
-    (item) => item.infant_mort_2020_z_transformed
-  );
-  const countries = data.map((item) => item.country);
-
-  return (
-    <Plot
-      data={[
-        {
-          x: health_exp_z_transformed,
-          y: infant_mort_z_transformed,
-          type: "scatter",
-          mode: "markers",
-          text: countries,
-          hoverinfo: "text",
-          marker: { color: "red" },
-        },
-      ]}
-      layout={{ width: 900, height: 600, title: "Using React Plotly" }}
-    />
-  );
-};

@@ -142,7 +142,7 @@ ggplotly(p_infant_vs_exp_z)
 # log transformed infant_vs_exp
 p_infant_vs_exp_z_transformed <- health_data %>% 
   ggplot(aes(x=healthexp_usd_percap_2019_z_transformed,y=infant_mort_2020_z_transformed,
-             text = paste0("Infant Mortality: ", infant_mort_2020, " /1,000 live births\n",
+             text = paste0("Infant Mortality: ", format(round(infant_mort_2020, 1), nsmall = 1), " /1,000 live births\n",
                           "Health Expenditure: ", healthexp_usd_percap_2019, " USD per capita\n",
                           "Country: ", country))) +
   geom_point()+
@@ -166,7 +166,7 @@ ggplotly(p_mat_vs_exp_z)
 # log transformed mat_vs_exp
 p_mat_vs_exp_z_transformed <- health_data %>% 
   ggplot(aes(x=healthexp_usd_percap_2019_z_transformed,y=mat_mort_2017_z_transformed,
-             text = paste0("Maternal Mortality: ", mat_mort_2017, " /100,000 live births\n",
+             text = paste0("Maternal Mortality: ", format(round(mat_mort_2017, 1), nsmall = 1), " /100,000 live births\n",
                           "Health Expenditure: ", healthexp_usd_percap_2019, " USD per capita\n",
                           "Country: ", country))) +
   geom_point()+
@@ -188,15 +188,15 @@ ggplotly(p_life_vs_exp_z)
 # Log transformed life vs exp
 p_life_vs_exp_z_transformed <- health_data %>% 
   ggplot(aes(x=healthexp_usd_percap_2019_z_transformed,y=life_exp_2019,
-             text = paste0("Life Expectancy: ", life_exp_2019, " years\n",
-                          "Health Expenditure: ", healthexp_usd_percap_2019, " USD per capita\n",
+             text = paste0("Life Expectancy: ", format(round(life_exp_2019, 1), nsmall = 1), " years\n",
+                          "Health Expenditure: ",healthexp_usd_percap_2019 , " USD per capita\n",
                           "Country: ", country))) +
   geom_point()+
   geom_smooth(aes(group=1), se=F)
 
 plotly2 <- ggplotly(p_life_vs_exp_z_transformed,tooltip="text")
 
-#plotly_json(plotly2)
+plotly_json(plotly2)
 #saveWidget(ggplotly(p_life_vs_exp_z_transformed), "Output/life_exp.html", selfcontained = F, libdir = "lib")
 
 

@@ -11,3 +11,19 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.grad {
+  width: 200px;
+  height: 30px;
+  border: 2px solid black;
+  border-radius: 3rem;
+  background-image: linear-gradient(to right,red, blue,green);
+}
+
+.grad-legend {
+  width: 100%;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
