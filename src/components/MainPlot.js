@@ -28,14 +28,28 @@ const MainPlot = ({ props: { form, setForm } }) => {
       y_title: "Life Expectancy",
     },
   };
-  const metrics = {
-    inf_vs_exp: "Infant Mortality (per 1,000 live births)",
-    mat_vs_exp: "Maternal Mortality (per 100,000 live births)",
-    life_vs_exp: "Life Expectancy (years)",
+  const sources = {
+    inf_vs_exp: "World Bank (2020, 2019)",
+    mat_vs_exp: "World Bank (2017, 2019)",
+    life_vs_exp: "World Bank (2019)",
   };
 
   const [dataArray, setDataArray] = useState(dataDict[form.plotId].data);
   const [annotations, setAnnotations] = useState([]);
+
+  const sourceInfo = {
+      text: `Sources: ${sources[form.plotId]}`,
+      xref: "paper",
+      yref: "paper",
+      align: "left",
+      x: 0,
+      y: 1.1,
+      showarrow: false,
+      font: {
+        size: 14,
+        color: "grey"
+      }
+  }
 
   useEffect(() => {
     const dataSrc = dataDict[form.plotId].data; // Gets the data array from named source
@@ -44,6 +58,8 @@ const MainPlot = ({ props: { form, setForm } }) => {
     const allCountriesTrace = { ...dataSrc[0] }; // 1st trace in the data array
     allCountriesTrace.name = "Country";
     allCountriesTrace.showlegend = true;
+    allCountriesTrace.marker.line = undefined
+    allCountriesTrace.marker.size=6
 
     const fittedTrace = { ...dataSrc[1] }; // 2nd trace in the data array
     fittedTrace.name = "Fitted Line";
@@ -60,6 +76,7 @@ const MainPlot = ({ props: { form, setForm } }) => {
       type: "scatter",
       mode: "markers+text",
       name: "Selected Country",
+      legendgroup: "group",
       showlegend: true,
       hoverinfo: "none",
       marker: { color: "red", size: "12" },
@@ -74,6 +91,7 @@ const MainPlot = ({ props: { form, setForm } }) => {
       mode: "lines",
       name: "",
       showlegend: false,
+      legendgroup: "group",
       hoverinfo: "none",
       marker: { color: "red", size: "6" },
     };
@@ -82,6 +100,8 @@ const MainPlot = ({ props: { form, setForm } }) => {
     if (country !== "all") {
       // Reduce opacity of all countries
       allCountriesTrace.marker.opacity = 0.1;
+      fittedTrace.line.color = "red"
+      fittedTrace.opacity=1
 
       // Find index of label containing the country name
       const countryIndex = allCountriesTrace.text.findIndex((s) =>
@@ -156,6 +176,8 @@ const MainPlot = ({ props: { form, setForm } }) => {
     // Show all countries - reset annotations and styles
     else {
       allCountriesTrace.marker.opacity = 1;
+      fittedTrace.line.color="grey"
+      fittedTrace.opacity=0.5
 
       // For each country, set colour depending on distance to closest point on fitted trace
       const colorscale = [
@@ -190,12 +212,11 @@ const MainPlot = ({ props: { form, setForm } }) => {
               colorscale: colorscale,
               autocolorscale: false,
               cauto: false,
-              // Custom color scale as raw data is not standardised
+              // Custom color scale as the raw life expectancy data is not standardised
               cmid: 0,
-              cmax: 4,
-              cmin: -4,
+              cmax: 20,
+              cmin: -20,
               color: colors,
-              line: undefined,
               //showscale: true 
             }
           : // marker for infant mortality and maternal mortality
@@ -206,7 +227,6 @@ const MainPlot = ({ props: { form, setForm } }) => {
               autocolorscale: false,
               cauto: true,
               color: colors,
-              line: undefined,
             };
 
       setAnnotations([]);
@@ -232,8 +252,9 @@ const MainPlot = ({ props: { form, setForm } }) => {
     <Plot
       data={dataArray}
       layout={{
-        width: 900,
-        height: 600,
+        // width: 900,
+        // height: 600,
+        autosize: true,
         //font
         font: {
           family: "Arial",
@@ -283,14 +304,15 @@ const MainPlot = ({ props: { form, setForm } }) => {
         legend: {
           orientation: "h",
           x: 1,
-          y: 1.08,
+          y: 1.07,
           //valign: "top"
           xanchor: "right",
         },
-        annotations: annotations,
+        annotations: [...annotations,sourceInfo],
       }}
-      config={{ displaylogo: false }}
+      config={{ displaylogo: false, responsive: true }}
       onClick={handleClick}
+      style={{width:"100%",height:"100%"}}
     />
   );
 };

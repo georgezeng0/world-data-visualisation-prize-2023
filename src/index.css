@@ -1,3 +1,7 @@
+:root {
+  --max-container-width: 1600px;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -12,12 +16,93 @@ code {
     monospace;
 }
 
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 300px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: var(--max-container-width);
+}
+
+header h1 {
+  color: #1c5da0;
+  margin-right: 50px;
+  padding-left: 10px;
+}
+
+header img {
+  max-width: 300px;
+}
+
+.plot-form {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  margin-bottom: 10px;
+  max-width: 1200px;
+}
+
+.form-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-item label {
+  margin-right: 5px;
+  font-size: 1rem;
+}
+
+.form-item select {
+  width: 100%;
+  min-width: 15ch;
+  max-width: 30ch;
+  border: 1px solid var(--select-border);
+  border-radius: 0.25em;
+  padding: 0.25em 0.5em;
+  font-size: 1rem;
+  cursor: pointer;
+  line-height: 1.1;
+  background-color: #fff;
+  background-image: linear-gradient(to top, #f9f9f9, #fff 33%);
+}
+
+.form-item button {
+  background-color: rgb(226, 226, 226);
+  border-radius: 2rem;
+  padding: 8px 16px;
+  font-size: 1rem;
+  border: 1px solid white;
+  transition: 0.2s;
+}
+
+.form-item button:hover:enabled{
+  cursor: pointer;
+  background-color: rgb(252, 252, 252); 
+  border: 1px solid black;
+}
+
+.plot-container {
+  width: 90%;
+  height: 600px;
+  max-width: 1200px;
+}
+
 .grad {
   width: 200px;
   height: 30px;
   border: 2px solid black;
   border-radius: 3rem;
   background-image: linear-gradient(to right,red, blue,green);
+  margin: 0px 8px;
 }
 
 .grad-legend {
@@ -26,4 +111,59 @@ code {
   text-align: center;
   justify-content: center;
   align-items: center;
+}
+
+.gradient-container {
+  padding: 10px 0
+}
+
+footer {
+  width: 100%;
+  height: 80px;
+  background-color: #1c5da0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+footer div {
+  color: white
+}
+
+@media screen and (max-width: 800px) {
+  header {
+    flex-direction: column-reverse;
+  }
+
+  header h1 {
+    margin-right: 0;
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  header img {
+    align-self: center;
+    max-width: 200px;
+  }
+
+  .plot-form {
+    flex-direction: column;
+  }
+
+  .plot-form .form-item {
+    margin-bottom: 4px
+  }
+
+  .plot-container {
+    width: 100%;
+    height: 400px;
+  }
+
+  .grad{
+    width: 100px;
+  }
+
+  .grad-legend {
+    font-size: small;
+  }
 }
