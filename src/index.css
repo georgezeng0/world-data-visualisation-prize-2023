@@ -195,4 +195,10 @@ footer div {
   .grad-legend {
     font-size: small;
   }
+
+  .information {
+    max-width: 1000px;
+    width: 95%;
+    margin: 0 0 30px 0;
+  }
 }
