@@ -235,8 +235,8 @@ const MainPlot = ({ props: { form, setForm } }) => {
               cauto: false,
               // Custom color scale as the raw life expectancy data is not standardised
               cmid: 0,
-              cmax: 15,
-              cmin: -15,
+              cmax: -10,
+              cmin: 10,
               color: colors,
               //showscale: true
             }
