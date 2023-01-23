@@ -52,15 +52,18 @@ header img {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%
 }
 
 .form-item label {
   margin-right: 5px;
   font-size: 1rem;
+  width: 70px;
+  text-align: right;
 }
 
 .form-item select {
-  width: 100%;
+  width: 200px;
   min-width: 15ch;
   max-width: 30ch;
   border: 1px solid var(--select-border);
