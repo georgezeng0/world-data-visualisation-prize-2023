@@ -156,6 +156,7 @@ footer {
 footer div {
   color: white;
   text-align: center;
+  width: 70%;
 }
 
 @media screen and (max-width: 800px) {
