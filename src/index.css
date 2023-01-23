@@ -19,7 +19,7 @@ main {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-width: 300px;
+  min-width: 400px;
 }
 
 header {
@@ -154,7 +154,8 @@ footer {
 }
 
 footer div {
-  color: white
+  color: white;
+  text-align: center;
 }
 
 @media screen and (max-width: 800px) {

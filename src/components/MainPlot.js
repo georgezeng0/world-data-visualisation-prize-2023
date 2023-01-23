@@ -4,6 +4,7 @@ import inf_exp_data from "../data/inf_exp.json";
 import mat_exp_data from "../data/mat_exp.json";
 import life_exp_data from "../data/life_exp.json";
 import countries from "../data/countries";
+import useWindowDimensions from "../useWindowDimensions";
 
 const MainPlot = ({ props: { form, setForm } }) => {
   const dataDict = {
@@ -36,6 +37,7 @@ const MainPlot = ({ props: { form, setForm } }) => {
 
   const [dataArray, setDataArray] = useState(dataDict[form.plotId].data);
   const [annotations, setAnnotations] = useState([]);
+  const { height, width } = useWindowDimensions()
 
   const sourceInfo = {
     text: `Sources: ${sources[form.plotId]}`,
@@ -168,23 +170,28 @@ const MainPlot = ({ props: { form, setForm } }) => {
         const [metric_text, exp_text, country_text] =
           allCountriesTrace.text[countryIndex].split("<br />");
 
-        setAnnotations([
-          {
-            text:
-              `<b>${country_text}</b>` +
-              `<br>${metric_text}` +
-              `<br>${exp_text}`,
-            xref: "paper",
-            yref: "paper",
-            align: "right",
-            x: 1,
-            y: form.plotId === "life_vs_exp" ? 0.2 : 1,
-            showarrow: false,
-            font: {
-              size: 18,
+        if (width >= 500) {
+          setAnnotations([
+            {
+              text:
+                `<b>${country_text}</b>` +
+                `<br>${metric_text}` +
+                `<br>${exp_text}`,
+              xref: "paper",
+              yref: "paper",
+              align: "right",
+              x: 1,
+              y: form.plotId === "life_vs_exp" ? 0.2 : 1,
+              showarrow: false,
+              font: {
+                size: 18,
+              },
             },
-          },
-        ]);
+          ]);
+        }
+        else {
+          setAnnotations([])
+       }
       }
     }
     // Show all countries - reset annotations and styles
@@ -248,7 +255,7 @@ const MainPlot = ({ props: { form, setForm } }) => {
 
     // Update data array whenever form input changes
     setDataArray([allCountriesTrace, fittedTrace, filteredTrace, vLineTrace]);
-  }, [form]);
+  }, [form, width]);
 
   const handleClick = (e) => {
     const clickedPoint = e.points[0];
@@ -318,7 +325,7 @@ const MainPlot = ({ props: { form, setForm } }) => {
         legend: {
           orientation: "h",
           x: 1,
-          y: 1.07,
+          y: width<500 ? 0.1: 1.06,
           //valign: "top"
           xanchor: "right",
         },
