@@ -4,9 +4,7 @@
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'Roboto', 'Arial', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -29,7 +27,7 @@ header {
   justify-content: space-between;
   margin-bottom: 20px;
   width: 100%;
-  max-width: var(--max-container-width);
+  max-width: 1300px;
 }
 
 header h1 {
@@ -72,7 +70,7 @@ header img {
   cursor: pointer;
   line-height: 1.1;
   background-color: #fff;
-  background-image: linear-gradient(to top, #f9f9f9, #fff 33%);
+  background-image: linear-gradient(to top, #c1c1c1, rgb(242, 242, 242) 33%);
 }
 
 .form-item button {
@@ -94,6 +92,7 @@ header img {
   width: 90%;
   height: 600px;
   max-width: 1200px;
+  margin: 0 0 15px 0;
 }
 
 .grad {
@@ -114,7 +113,35 @@ header img {
 }
 
 .gradient-container {
-  padding: 10px 0
+  padding: 10px 20px;
+  border: 1px solid #113a63;
+  border-radius: 7px;
+  text-align: center;
+  margin: 0 0 20px 0;
+}
+
+.gradient-container h4 {
+  margin: 0 0 5px 0;
+  color: rgb(77, 77, 77);
+}
+
+.information {
+  max-width: 1000px;
+  width: 80%;
+  margin: 0 0 50px 0;
+}
+
+.information hr {
+  border: 1px solid #113a63;
+}
+
+.information h2 {
+  text-align: center;
+  color:#113a63
+}
+
+.information p {
+  text-align:justify
 }
 
 footer {

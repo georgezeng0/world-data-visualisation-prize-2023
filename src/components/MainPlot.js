@@ -38,18 +38,18 @@ const MainPlot = ({ props: { form, setForm } }) => {
   const [annotations, setAnnotations] = useState([]);
 
   const sourceInfo = {
-      text: `Sources: ${sources[form.plotId]}`,
-      xref: "paper",
-      yref: "paper",
-      align: "left",
-      x: 0,
-      y: 1.1,
-      showarrow: false,
-      font: {
-        size: 14,
-        color: "grey"
-      }
-  }
+    text: `Sources: ${sources[form.plotId]}`,
+    xref: "paper",
+    yref: "paper",
+    align: "left",
+    x: 0,
+    y: 1.1,
+    showarrow: false,
+    font: {
+      size: 14,
+      color: "grey",
+    },
+  };
 
   useEffect(() => {
     const dataSrc = dataDict[form.plotId].data; // Gets the data array from named source
@@ -58,8 +58,8 @@ const MainPlot = ({ props: { form, setForm } }) => {
     const allCountriesTrace = { ...dataSrc[0] }; // 1st trace in the data array
     allCountriesTrace.name = "Country";
     allCountriesTrace.showlegend = true;
-    allCountriesTrace.marker.line = undefined
-    allCountriesTrace.marker.size=6
+    allCountriesTrace.marker.line = undefined;
+    allCountriesTrace.marker.size = 6;
 
     const fittedTrace = { ...dataSrc[1] }; // 2nd trace in the data array
     fittedTrace.name = "Fitted Line";
@@ -100,8 +100,8 @@ const MainPlot = ({ props: { form, setForm } }) => {
     if (country !== "all") {
       // Reduce opacity of all countries
       allCountriesTrace.marker.opacity = 0.1;
-      fittedTrace.line.color = "red"
-      fittedTrace.opacity=1
+      fittedTrace.line.color = "red";
+      fittedTrace.opacity = 1;
 
       // Find index of label containing the country name
       const countryIndex = allCountriesTrace.text.findIndex((s) =>
@@ -139,16 +139,30 @@ const MainPlot = ({ props: { form, setForm } }) => {
 
         const fittedY = fittedTrace.y[closestFittedIndex];
 
+        // Set colour of highlighted traces depending on point position
+        const isAboveLine = countryY > fittedY;
+        const filterColor = isAboveLine
+        ? form.plotId === "life_vs_exp"
+          ? "green"
+          : "red"
+        : form.plotId === "life_vs_exp"
+        ? "red"
+            : "green";
+        
+        fittedTrace.line.color = filterColor
+
         // Highlight marker
         filteredTrace.x = [countryX];
         filteredTrace.y = [countryY];
         filteredTrace.text = [country];
         filteredTrace.textposition =
           countryY > fittedY ? "top center" : "bottom center";
+        filteredTrace.marker.color = filterColor
 
         // Vertical line
         vLineTrace.x = [countryX, countryX];
         vLineTrace.y = [countryY, fittedY];
+        vLineTrace.marker.color = filterColor
 
         // Annotation for country
         const [metric_text, exp_text, country_text] =
@@ -176,15 +190,15 @@ const MainPlot = ({ props: { form, setForm } }) => {
     // Show all countries - reset annotations and styles
     else {
       allCountriesTrace.marker.opacity = 1;
-      fittedTrace.line.color="grey"
-      fittedTrace.opacity=0.5
+      fittedTrace.line.color = "grey";
+      fittedTrace.opacity = 0.5;
 
       // For each country, set colour depending on distance to closest point on fitted trace
       const colorscale = [
         [0, "green"],
-        [0.3, "green"],
+        [0.2, "green"],
         [0.5, "blue"],
-        [0.6, "red"],
+        [0.7, "red"],
         [1.0, "red"],
       ];
 
@@ -214,10 +228,10 @@ const MainPlot = ({ props: { form, setForm } }) => {
               cauto: false,
               // Custom color scale as the raw life expectancy data is not standardised
               cmid: 0,
-              cmax: 20,
-              cmin: -20,
+              cmax: 15,
+              cmin: -15,
               color: colors,
-              //showscale: true 
+              //showscale: true
             }
           : // marker for infant mortality and maternal mortality
             {
@@ -308,11 +322,11 @@ const MainPlot = ({ props: { form, setForm } }) => {
           //valign: "top"
           xanchor: "right",
         },
-        annotations: [...annotations,sourceInfo],
+        annotations: [...annotations, sourceInfo],
       }}
       config={{ displaylogo: false, responsive: true }}
       onClick={handleClick}
-      style={{width:"100%",height:"100%"}}
+      style={{ width: "100%", height: "100%" }}
     />
   );
 };
