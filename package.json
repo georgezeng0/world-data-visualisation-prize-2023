@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^13.5.0",
     "csvtojson": "^2.0.10",
     "plotly.js": "^2.17.1",
+    "plotly.js-basic-dist-min": "^2.18.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-plotly.js": "^2.6.0",

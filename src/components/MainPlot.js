@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from "react";
-import Plot from "react-plotly.js";
+
+// Using minifised lib
+import Plotly from "plotly.js-basic-dist-min";
+import createPlotlyComponent from "react-plotly.js/factory";
+//import Plot from "react-plotly.js";
+
 import inf_exp_data from "../data/inf_exp.json";
 import mat_exp_data from "../data/mat_exp.json";
 import life_exp_data from "../data/life_exp.json";
 import countries from "../data/countries";
 import useWindowDimensions from "../useWindowDimensions";
+
+const Plot = createPlotlyComponent(Plotly);
 
 const MainPlot = ({ props: { form, setForm } }) => {
   const dataDict = {
@@ -39,6 +46,7 @@ const MainPlot = ({ props: { form, setForm } }) => {
   const [annotations, setAnnotations] = useState([]);
   const { height, width } = useWindowDimensions()
 
+  // Annotation for source info
   const sourceInfo = {
     text: `Sources: ${sources[form.plotId]}`,
     xref: "paper",
@@ -53,6 +61,7 @@ const MainPlot = ({ props: { form, setForm } }) => {
     },
   };
 
+  // Adjust traces and annotations depending on form changes
   useEffect(() => {
     const dataSrc = dataDict[form.plotId].data; // Gets the data array from named source
     const country = form.country;
