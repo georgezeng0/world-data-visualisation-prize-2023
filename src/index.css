@@ -187,7 +187,7 @@ footer div {
   }
 
   .plot-container {
-    width: 100%;
+    width: 98%;
     height: 400px;
   }
 
@@ -197,6 +197,11 @@ footer div {
 
   .grad-legend {
     font-size: small;
+  }
+
+  .gradient-container{
+    margin-left: 5px;
+    margin-right: 5px
   }
 
   .information {

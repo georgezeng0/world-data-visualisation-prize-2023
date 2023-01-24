@@ -44,7 +44,7 @@ const MainPlot = ({ props: { form, setForm } }) => {
 
   const [dataArray, setDataArray] = useState(dataDict[form.plotId].data);
   const [annotations, setAnnotations] = useState([]);
-  const { height, width } = useWindowDimensions()
+  const { height, width } = useWindowDimensions();
 
   // Annotation for source info
   const sourceInfo = {
@@ -66,17 +66,17 @@ const MainPlot = ({ props: { form, setForm } }) => {
     const dataSrc = dataDict[form.plotId].data; // Gets the data array from named source
     const country = form.country;
 
+    // Configure all countries trace
     const allCountriesTrace = { ...dataSrc[0] }; // 1st trace in the data array
     allCountriesTrace.name = "Country";
     allCountriesTrace.showlegend = true;
     allCountriesTrace.marker.line = undefined;
     allCountriesTrace.marker.size = 6;
 
+    // Configure fitted trace
     const fittedTrace = { ...dataSrc[1] }; // 2nd trace in the data array
     fittedTrace.name = "Fitted Line";
     fittedTrace.showlegend = true;
-
-    //fittedTrace.hoverinfo = "x+y";
 
     // Create overlying trace when selecting a country:
     const filteredTrace = {
@@ -93,7 +93,7 @@ const MainPlot = ({ props: { form, setForm } }) => {
       marker: { color: "red", size: "12" },
     };
 
-    // Vertical line trace when selecting a country:
+    // Create vertical line trace when selecting a country:
     const vLineTrace = {
       x: [],
       y: [],
@@ -109,7 +109,7 @@ const MainPlot = ({ props: { form, setForm } }) => {
 
     // If filtered for country:
     if (country !== "all") {
-      // Reduce opacity of all countries
+      // Opacity settings
       allCountriesTrace.marker.opacity = 0.1;
       fittedTrace.line.color = "red";
       fittedTrace.opacity = 1;
@@ -137,7 +137,7 @@ const MainPlot = ({ props: { form, setForm } }) => {
           },
         ]);
       }
-      // No missing x or y datapoints
+      // No missing data
       else {
         const countryX = allCountriesTrace.x[countryIndex];
         const countryY = allCountriesTrace.y[countryIndex];
@@ -147,57 +147,55 @@ const MainPlot = ({ props: { form, setForm } }) => {
           return Math.abs(b - countryX) < Math.abs(a - countryX) ? b : a;
         });
         const closestFittedIndex = fittedTrace.x.indexOf(closestFittedX);
-
         const fittedY = fittedTrace.y[closestFittedIndex];
 
         // Set colour of highlighted traces depending on point position
         const isAboveLine = countryY > fittedY;
         const filterColor = isAboveLine
-        ? form.plotId === "life_vs_exp"
-          ? "green"
-          : "red"
-        : form.plotId === "life_vs_exp"
-        ? "red"
-            : "green";
-        
-        fittedTrace.line.color = filterColor
+          ? form.plotId === "life_vs_exp"
+            ? "green"
+            : "red"
+          : form.plotId === "life_vs_exp"
+          ? "red"
+          : "green";
+
+        fittedTrace.line.color = filterColor;
 
         // Highlight marker
         filteredTrace.x = [countryX];
         filteredTrace.y = [countryY];
         filteredTrace.text = [country];
-        filteredTrace.textposition =
-          countryY > fittedY ? "top center" : "bottom center";
-        filteredTrace.marker.color = filterColor
+        filteredTrace.textposition = isAboveLine
+          ? "top center"
+          : "bottom center";
+        filteredTrace.marker.color = filterColor;
 
         // Vertical line
         vLineTrace.x = [countryX, countryX];
         vLineTrace.y = [countryY, fittedY];
-        vLineTrace.marker.color = filterColor
+        vLineTrace.marker.color = filterColor;
 
         // Annotation for country
         const [metric_text, exp_text, country_text] =
           allCountriesTrace.text[countryIndex].split("<br />");
 
-        
-          setAnnotations([
-            {
-              text:
-                `<b>${country_text}</b>` +
-                `<br>${metric_text}` +
-                `<br>${exp_text}`,
-              xref: "paper",
-              yref: "paper",
-              align: "right",
-              x: 1,
-              y: form.plotId === "life_vs_exp" ? 0.2 : 0.95,
-              showarrow: false,
-              font: {
-                size: width<800? 10:18,
-              },
+        setAnnotations([
+          {
+            text:
+              `<b>${country_text}</b>` +
+              `<br>${metric_text}` +
+              `<br>${exp_text}`,
+            xref: "paper",
+            yref: "paper",
+            align: "right",
+            x: 1,
+            y: form.plotId === "life_vs_exp" ? 0.2 : 0.95,
+            showarrow: false,
+            font: {
+              size: width < 800 ? 10 : 18,
             },
-          ]);
-        
+          },
+        ]);
       }
     }
     // Show all countries - reset annotations and styles
@@ -301,7 +299,7 @@ const MainPlot = ({ props: { form, setForm } }) => {
             text: `<b>${titles[form.plotId].x_title}</b>`,
             font: {
               //color: '',
-              size: width<500? 14:22,
+              size: width < 500 ? 14 : 22,
             },
             //standoff: 100
           },
@@ -316,7 +314,7 @@ const MainPlot = ({ props: { form, setForm } }) => {
             text: `<b>${titles[form.plotId].y_title}</b>`,
             font: {
               //color: '',
-              size: width<500? 14:22,
+              size: width < 500 ? 14 : 22,
             },
             //standoff: 50
           },
@@ -331,13 +329,13 @@ const MainPlot = ({ props: { form, setForm } }) => {
         legend: {
           orientation: "h",
           x: 1,
-          y: width<500 ? 0.1: 1.06,
+          y: width < 500 ? 0.1 : 1.06,
           //valign: "top"
           xanchor: "right",
           font: {
-            size: width<500? 6:12
+            size: width < 500 ? 6 : 12,
           },
-          borderwidth:1
+          borderwidth: 1,
         },
         annotations: [...annotations, sourceInfo],
       }}
